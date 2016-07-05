@@ -334,11 +334,8 @@ body a {
 }
 
 
-/*项目*/
-.titleFont{
-  
-}
-.dialogBox{
+/*时间选择控件*/
+.datePigBox{
   width:500px;
   text-align: left;
   margin:0 auto;
