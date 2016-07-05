@@ -1,0 +1,26 @@
+{
+  "name": "angular-task",
+  "version": "1.0.0",
+  "description": "AngularJS task",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xm94630/angularTask.git"
+  },
+  "author": "xm94630",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xm94630/angularTask/issues"
+  },
+  "homepage": "https://github.com/xm94630/angularTask#readme",
+  "devDependencies": {
+    "browser-sync": "^2.13.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-load-plugins": "^1.2.4",
+    "gulp-ng-annotate": "^2.0.0"
+  }
+}
