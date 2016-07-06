@@ -1,0 +1,19 @@
+<div class="chosen chosen-container" ng-class="{'chosen-container-single-nosearch':chosenSearch,'chosen-container-active chosen-with-drop':isOpen,'chosen-container-multi':!isSingle,'chosen-container-single':isSingle}">
+    <div ng-click="openDrop()">
+    <a class="chosen-single" ng-if="isSingle"><span>{{currentOption}}</span><div><b><i class="iconfont icon-angle-down"></i></b></div></a>
+    <ul class="chosen-choices" ng-if="!isSingle">
+        <li class="search-choice" ng-repeat="choice in currentOption"><span>{{choice}}</span><a class="search-choice-close" ng-click="removeSelected($index,$event)"></a></li>
+        <li class="search-field">
+            <input type="text" value="{{multiValue}}" style="width:{{multiwidth}}" class="default" autocomplete="off">
+        </li>
+    </ul>
+    </div>
+    <div class="chosen-drop">
+        <div class="chosen-search" ng-show="!chosenSearch">
+            <input type="text" placeholder="搜索关键字" ng-model="searchVal" ng-change="searchOption(searchVal)" autocomplete="off">
+        </div>
+        <ul class="chosen-results">
+            <li ng-repeat="result in results" data-index="{{$index}}" data-value="{{result.value}}" ng-class="{'group-result':result.group=='title','active-result':result.group=='none','active-result group-option':result.group=='option'}" ng-click="clickoption($event)" ng-mouseleave="mouseleave($event)" ng-mouseover="mouseover($event)" title="{{result.label}}">{{result.label}}</li>
+        </ul>
+    </div>
+</div>
