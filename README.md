@@ -14,4 +14,6 @@
 - git clone git@github.com:xm94630/task5.git
 - 进入项目文件，执行 npm install
 - 开启gulp服务，执行 gulp，浏览器自动打开页面
-- 访问页面 http://localhost:8088/#/login  
+- 访问页面 http://localhost:8088/#/login 
+- 
+
