@@ -345,5 +345,18 @@ body a {
 .myOption{
   width:100px;
 }
-
+.successInfo{
+  display: inline-block;
+  background: #96CDCD;
+  width:16px;
+  height:16px;
+  vertical-align: middle;
+  border-radius: 8px;
+  -o-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  color:#fff;
+  text-align: center;
+  line-height: 16px;
+}
 
