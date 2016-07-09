@@ -1,4 +1,3 @@
-//徐明
 appDirectives.directive('datePigDirective', function($rootScope) {
 	return {
 	    restrict: 'AE',
