@@ -3,7 +3,8 @@ appDirectives.directive('chosenDirective', function($timeout) {
         scope: {
             'setSelected': '=',
             'changeFunction': '=',
-            'chosenData': '='
+            'chosenData': '=',
+            'myValue': '=',
         },
         require: "?ngModel",
         restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
@@ -90,6 +91,10 @@ appDirectives.directive('chosenDirective', function($timeout) {
                         selectedDom = [dom];
                     }
                     scope.currentOption = _selected;
+
+                    //优化
+                    scope.myValue = _selected;
+
                     changeFunctions();
                 }
 

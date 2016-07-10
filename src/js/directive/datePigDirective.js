@@ -1,4 +1,4 @@
-appDirectives.directive('datePigDirective', function($rootScope) {
+appDirectives.directive('datePigDirective', function($rootScope,$timeout) {
 	return {
 	    restrict: 'AE',
 	    replace: 'true',
@@ -25,14 +25,15 @@ appDirectives.directive('datePigDirective', function($rootScope) {
 	    	//l(attrs.dateInfo);
 
 			//时间参数对象
-			var t = null;
+			var a,b,c,d,aa,bb,cc,dd,
+			    t = null;
 			var defaultYearList = {
-				group: "none",
+				group: "title",
 				label:"年份",
 				value: "-1"
 			};
 			var defaultMonthList = {
-				group: "none",
+				group: "title",
 				label:"月份",
 				value: "-1"
 			};
@@ -317,13 +318,18 @@ appDirectives.directive('datePigDirective', function($rootScope) {
  						if(isSameYear(time1,time2)){
  							arr.push(a);
  						}else{
+
  							//递归调用
  							firstArr  = getValid(time1,time2)('year' ,a);
  							secondArr = getValid(time1,time2)('year' ,c);
  							
  							//只需对首尾两个年份做判断
- 							if(firstArr.indexOf(x) !=-1) arr.push(a);
- 							if(secondArr.indexOf(x)!=-1) arr.push(c);
+ 							if(firstArr.indexOf(x) !=-1){
+ 								arr.push(a);
+ 							}
+ 							if(secondArr.indexOf(x)!=-1){
+ 								arr.push(c);
+ 							}
  							
  							//剩余年份都是有1-12月份
  							if(c-a>=2){
@@ -361,39 +367,73 @@ appDirectives.directive('datePigDirective', function($rootScope) {
  			}
 
 			//获取时间参数对象
-			t = parseParameter(scope.dateInfo);
+			t  = parseParameter(scope.dateInfo);
+			
 			//校验时间
-			t = checkTime(t);
-			l(t);
+			t  = checkTime(t);
 
-			//实例化chosen
- 			scope.chosendata1 = packageData(defaultYearList, getRangeByYear ([t.s.min.year,t.s.min.month],[t.s.max.year,t.s.max.month]));
- 			scope.chosendata2 = packageData(defaultMonthList,getRangeByMonth([t.s.min.year,t.s.min.month],[t.s.max.year,t.s.max.month]));
- 			scope.chosendata3 = packageData(defaultYearList, getRangeByYear ([t.e.min.year,t.e.min.month],[t.e.max.year,t.e.max.month]));
- 			scope.chosendata4 = packageData(defaultMonthList,getRangeByMonth([t.e.min.year,t.e.min.month],[t.e.max.year,t.e.max.month]));
+			a  = t.s.min.year;
+			b  = t.s.min.month;
+			c  = t.s.max.year;
+			d  = t.s.max.month;
+			aa = t.e.min.year;
+			bb = t.e.min.month;
+			cc = t.e.max.year;
+			dd = t.e.max.month;
+		    
+			//实例化chosen所需数据
+ 			scope.chosendata1 = packageData(defaultYearList, getRangeByYear ([a,b],[c,d]));
+ 			scope.chosendata2 = packageData(defaultMonthList,getRangeByMonth([a,b],[c,d]));
+ 			scope.chosendata3 = packageData(defaultYearList, getRangeByYear ([aa,bb],[cc,dd]));
+ 			scope.chosendata4 = packageData(defaultMonthList,getRangeByMonth([aa,bb],[cc,dd]));
+ 			
+
  			scope.chosendata = {
  				item1:{
  					data:scope.chosendata1,
+ 					selected:null,
  					change:function(label,value){
  						l(1)
  					}
  				},
  				item2:{
  					data:scope.chosendata2,
+ 					selected:null,
  					change:function(label,value){
  						l(2)
  					}
  				},
  				item3:{
  					data:scope.chosendata3,
- 					change:function(label,value){
- 						l(3)
+ 					selected:null,
+ 					change:function(label,value,x,y){
+ 						if(parseInt(value[0])!=-1){
+
+ 							var x = parseInt(value[0]);
+ 							var oldValue = scope.chosendata.item4.myValue;
+ 							l(oldValue)
+							//获取选中当前年份的有效月份
+	 						monthArr = getValid([aa,bb],[cc,dd])('year',x);
+	 						scope.chosendata.item4.data = packageData(defaultMonthList,monthArr);
+							scope.chosendata.item4.selected = [oldValue];
+	 						
+
+ 						}
  					}
  				},
  				item4:{
  					data:scope.chosendata4,
+ 					selected:document.querySelector('#chose4 li[data-value="10"]'),
  					change:function(label,value){
- 						l(4)
+ 						
+ 						var x = parseInt(value[0]);
+						var oldValue = scope.chosendata.item3.myValue;
+						l(oldValue)
+						//获取选中当前年份的有效月份
+						//yearArr = getValid([aa,bb],[cc,dd])('month',x);
+ 						//scope.chosendata.item3.data = packageData(defaultYearList,yearArr);
+						//scope.chosendata.item3.selected = [oldValue];
+
  					}
  				}
  			}
@@ -401,6 +441,51 @@ appDirectives.directive('datePigDirective', function($rootScope) {
 
 
 
+
+
 	    }
 	};
 });
+
+
+ 				/*item3:{
+ 					data:scope.chosendata3,
+ 					selected:null,
+ 					change:function(label,value,x,y){
+
+ 						l(scope.chosendata.item4)
+
+						//记住月份的已有选择
+ 						var oldMonthSelected = scope.chosendata.item4.selected;
+ 						l(oldMonthSelected)
+ 						return;
+						//获取选中当前年份的有效月份
+ 						monthArr = getValid([aa,bb],[cc,dd])('year',value[0]);
+ 						//选择年份后，重新渲染月份
+ 						scope.chosendata.item4.data = packageData(defaultMonthList,monthArr);
+ 						scope.chosendata.item4.selected = oldMonthSelected;
+ 						
+ 					}
+ 				},
+ 				item4:{
+ 					data:scope.chosendata4,
+ 					selected:null,
+ 					change:function(label,value){
+
+ 						//记住年份的已有选择
+ 						var oldYearSelected = scope.chosendata.item3;
+ 						l(oldYearSelected)
+ 						$timeout(function(){
+ 							l(oldYearSelected)
+ 						},2000)
+ 						return;
+						//获取选中当前月份的有年月份
+ 						yearArr = getValid([aa,bb],[cc,dd])('month',value[0]);
+ 						//选择月份后，重新渲染年份
+ 						scope.chosendata.item3.data = packageData(defaultYearList,yearArr);
+ 						scope.chosendata.item3.selected = oldYearSelected;
+
+ 					}
+ 				}
+ 			}
+*/

@@ -13,7 +13,7 @@ appControllers.controller("homeCtrl",function($scope,XmService){
 		/*sTime : ['2016/1','2018/5'],
 		eTime : ['2000/5','2019/9']*/
 		sTime : ['2016/1','2016/12'],
-		eTime : ['2017/9','2018/2']
+		eTime : ['2017/9','2019/2']
 	};
 
 });
