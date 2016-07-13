@@ -70,33 +70,138 @@ appDirectives.directive('datePigDirective', function($rootScope,$timeout) {
 				console.log('[warn]'+info);
 			}
 
+			//在年月时间基础上，加上n月，返回新的年月
+			//addMonth([2001,9],5) => [2002,2]
+			function addMonth(arr,n){
+
+				var year = arr[0];
+				var month = arr[1];
+				var addY;
+				if(n>=0){
+					if(n>12){
+						addY = n%12;
+						year += addY;
+					}else{
+						month += n;
+					}
+					if(month>12){
+						month -= 12;
+						year  += 1;
+					}
+				}else{
+					if(n<-12){
+						addY  = n%12;
+						year += addY;
+					}else{
+						month += n;
+					}
+					if(month<=0){
+						month  = month+12;
+						year  -= 1;
+					}
+				}		
+				return [year,month]	
+
+			}
+
 			//解析指令的参数，返回对象
 			function parseParameter(data){
 
-				var sTime_min = data.sTime[0]; //开始时间 可选最小范围				
-				    sTime_max = data.sTime[1]; //开始时间 可选最大范围				
-				    eTime_min = data.eTime[0]; //结束时间 可选最小范围			
-				    eTime_max = data.eTime[1]; //结束时间 可选最大范围
+				var sTime_min,sTime_max,eTime_min,eTime_max;
+				var bool,reg,a,b,c,d,aa,bb,cc,dd;
+				reg  = /^\d{4}\/\d{1,2}$/;
+
+				//参数都是数组
+				if(isArray(data.sTime) && isArray(data.eTime)){
+
+					sTime_min = data.sTime[0]; //开始时间 可选最小范围				
+					sTime_max = data.sTime[1]; //开始时间 可选最大范围				
+					eTime_min = data.eTime[0]; //结束时间 可选最小范围			
+					eTime_max = data.eTime[1]; //结束时间 可选最大范围
+
+					bool = reg.test(sTime_min) &&
+						   reg.test(sTime_max) &&
+						   reg.test(eTime_min) &&
+						   reg.test(eTime_max);
+					if(!bool) error('时间格式有误,请符合 YYYY/MM 格式');
+					
+					a  = parseInt(sTime_min.split('/')[0]);
+					b  = parseInt(sTime_min.split('/')[1]);
+					c  = parseInt(sTime_max.split('/')[0]);
+					d  = parseInt(sTime_max.split('/')[1]);
+					aa = parseInt(eTime_min.split('/')[0]);
+					bb = parseInt(eTime_min.split('/')[1]);
+					cc = parseInt(eTime_max.split('/')[0]);
+					dd = parseInt(eTime_max.split('/')[1]);
+
+				//参数为数组和数字
+				}else if(isArray(data.sTime) && isNumber(data.eTime)){
+
+					var n = data.eTime;
+
+					sTime_min = data.sTime[0]; //开始时间 可选最小范围				
+					sTime_max = data.sTime[1]; //开始时间 可选最大范围	
+					bool = reg.test(sTime_min) &&
+						   reg.test(sTime_max);
+					if(!bool) error('时间格式有误,请符合 YYYY/MM 格式');
+					
+					a  = parseInt(sTime_min.split('/')[0]);
+					b  = parseInt(sTime_min.split('/')[1]);
+					c  = parseInt(sTime_max.split('/')[0]);
+					d  = parseInt(sTime_max.split('/')[1]);	
+					aa = addMonth([a,b],n)[0];		
+					bb = addMonth([a,b],n)[1];		
+					cc = addMonth([c,d],n)[0];		
+					dd = addMonth([c,d],n)[1];		
+
+				//参数是数字和数组
+				}else if(isNumber(data.sTime) && isArray(data.eTime)){
+
+					var n = data.sTime;
+
+					eTime_min = data.eTime[0]; //结束时间 可选最小范围			
+					eTime_max = data.eTime[1]; //结束时间 可选最大范围	
+					bool = reg.test(eTime_min) &&
+						   reg.test(eTime_max);
+					if(!bool) error('时间格式有误,请符合 YYYY/MM 格式');
+					
+					aa = parseInt(eTime_min.split('/')[0]);
+					bb = parseInt(eTime_min.split('/')[1]);
+					cc = parseInt(eTime_max.split('/')[0]);
+					dd = parseInt(eTime_max.split('/')[1]);	
+					a  = addMonth([aa,bb],-n)[0];		
+					b  = addMonth([aa,bb],-n)[1];		
+					c  = addMonth([cc,dd],-n)[0];		
+					d  = addMonth([cc,dd],-n)[1];
+
+				}else{
+					error('实例化参数有误');
+				}
+			    
+				
+				
+				if(a<0 ||c<0 ||aa<0 ||cc<0 ) error('不支持公元前的年份');
+				if(b>12||d>12||bb>12||dd>12) error('月份不得大于12');
 				
 				return {
 					s:{
 					    min:{
-					    	year  : parseInt(sTime_min.split('/')[0]),
-					    	month : parseInt(sTime_min.split('/')[1])
+					    	year  : a,
+					    	month : b
 					    },
 					    max:{
-					    	year  : parseInt(sTime_max.split('/')[0]),
-					    	month : parseInt(sTime_max.split('/')[1])
+					    	year  : c,
+					    	month : d
 					    }
 					},
 					e:{
 						min:{
-							year  : parseInt(eTime_min.split('/')[0]),
-							month : parseInt(eTime_min.split('/')[1])
+							year  : aa,
+							month : bb
 						},
 						max:{
-							year  : parseInt(eTime_max.split('/')[0]),
-							month : parseInt(eTime_max.split('/')[1])
+							year  : cc,
+							month : dd
 						}
 					}
 				}
@@ -440,7 +545,7 @@ appDirectives.directive('datePigDirective', function($rootScope,$timeout) {
 
  						time2 = parseInt(value[0]);
  						//其他三项已经填值了，就可以判断整体时间的大小了
- 						if(time1 && time4!=undefined && time4!=-1 && time3){
+ 						if(time1 && time2!=-1 && time3 && time4!=undefined && time4!=-1 ){
  							rule([time1,time2],[time3,time4],greaterThan,function(){
  								scope.chosendata.item4.selected = [time2];
  								warn('开始时间大于结束时间,修正结束时间的月份');
@@ -475,9 +580,9 @@ appDirectives.directive('datePigDirective', function($rootScope,$timeout) {
  					selected:document.querySelector('#chose4 li[data-value="10"]'),
  					change:function(label,value){
 
-						time4 = parseInt(value[0]);
 						//其他三项已经填值了，就可以判断整体时间的大小了
- 						if(time1 && time2!=undefined && time2!=-1 && time3){
+						time4 = parseInt(value[0]);
+ 						if(time1 && time2!=undefined && time2!=-1 && time3 && time4!=-1){
  							rule([time1,time2],[time3,time4],greaterThan,function(){
  								scope.chosendata.item2.selected = [time4];
  								warn('开始时间大于结束时间,修正结束时间的月份');
