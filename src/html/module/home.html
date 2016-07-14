@@ -1,4 +1,34 @@
 <div class="FCenter PD20">
     <div class="FS12">我是时间小控件 (* ￣3)(ε￣ *)</div>
 </div>
-<div date-pig-directive></div>
+
+<div class="datePigBox">
+	<div date-pig-directive></div>
+</div>
+<br>
+<div class="datePigBox">
+	<pre class="">
+		使用方法1：
+		限定时间间隔为12月，限定结束时间范围
+		$scope.pigData={
+		    sTime : 12,
+		    eTime : ['2017/9','2019/2']
+		};
+
+		使用方法2：
+		限定时间间隔为12月，限定开始时间范围
+		$scope.pigData={
+		    sTime : ['2000/1','2006/10'],
+		    eTime : 12
+		};
+
+		使用方法3：
+		限定开始时间范围和结束时间范围
+		$scope.pigData={
+		    sTime : ['2016/1','2018/5'],
+		    eTime : ['2000/5','2019/9']
+		};
+
+		上面的实例采用的第一种方法哦~
+	</pre>
+</div>
