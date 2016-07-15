@@ -1,19 +1,21 @@
-# 第五期
-- 1.熟悉angularJS开发环境，目录结构
-- 2.了解 Directive、Controller、Service，自己随便写一个小页面
+# 第八期
 
-###资料：
+###日期选择器
 
-- [AngularJS：何时应该使用Directive、Controller、Service？](http://damoqiongqiu.iteye.com/blog/1971204)
-- [AngularJS 指令实践指南（一）](http://blog.jobbole.com/62249/)
-- [http://blog.jobbole.com/62999/ AngularJS 指令实践指南（二）](http://blog.jobbole.com/62999/)
-- [2013年AngularJS学习资源精选](http://blog.jobbole.com/54716/)
-- [AngularJS开发人员最常犯的10个错误](http://blog.jobbole.com/78946/)
+###功能说明
+- 可设置起始时间，结束时间为当月时间
+- 根据选择自动调整可选范围，结束时间不能选择小于开始时间的时间段，开始时间不能选择大于结束时间的时间段，不可选时间段要求置灰
+- 开始时间不能大于结束时间，结束时间不能小于开始时间，做容错处理
+-（选做）可以设置开始时间和结束时间的时间差，比如只能选择最长12个月的时间间隔段，2013-1～2013-12或2013-5～2014-4
 
-###使用说明（默认已经安装node、gulp等开发环境）：
-- git clone git@github.com:xm94630/task5.git
-- 进入项目文件，执行 npm install
-- 开启gulp服务，执行 gulp，浏览器自动打开页面
-- 访问页面 http://localhost:8088/#/login 
-- 
+###要求
+- function尽量抽象
+- 注释清晰
+
+###提供两种思路
+- 根据逻辑统一计算四个select
+- 每个select单独计算
+
+
+
 
